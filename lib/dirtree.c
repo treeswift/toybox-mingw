@@ -183,7 +183,11 @@ int dirtree_recurse(struct dirtree *node,
     if ((flags&DIRTREE_BREADTH) && isdotdot(entry->d_name)) continue;
     if (!(new = dirtree_add_node(node, entry->d_name, flags))) continue;
     if (!new->st.st_canary && !new->st.st_mode)
+#ifndef DISABLE_DIRENT_DTYPE
       new->st.st_mode = entry->d_type<<12;
+#else
+      new->st.st_mode = S_IFMT;
+#endif
     new = dirtree_handle_callback(new, callback);
     if (new == DIRTREE_ABORTVAL) goto done;
     if (new) {
