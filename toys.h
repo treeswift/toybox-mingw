@@ -120,6 +120,10 @@ long syscall(long number, ...) { return 0; }
 #include "lib/lib.h"
 #include "lib/lsm.h"
 #include "lib/toyflags.h"
+
+// FIXME implement [f]chown in libowners
+inline int fchown(int fd, uid_t owner, gid_t group) { return 0; }
+
 /* silverware */
 inline int vfork() { return -1; }
 // TODO fork()
