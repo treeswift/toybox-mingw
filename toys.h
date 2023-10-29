@@ -39,6 +39,11 @@
 #include <stdlib.h>
 /* Windows */
 #include <io.h>
+/* missing declarations (normally provided in stdlib.h) */
+inline int setenv(const char *name, const char *value, int overwrite) { return 0; }
+inline int unsetenv(const char *name) { return 0; }
+char *getenv(const char *name); /* stub or implement? */
+
 #include <string.h>
 #ifdef PROVIDE_STPCPY
 inline char* stpcpy(char* dest, const char* src) {
