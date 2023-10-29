@@ -144,11 +144,21 @@ inline pid_t waitpid(pid_t pid, int *wstatus, int options) { return -1; }
 inline int pipe(int pipefd[2]) { return _pipe(pipefd, 4096, _O_BINARY); }
 inline int kill(pid_t pid, int sig) { return errno = ENOSYS, -1; } // TODO TerminateThread
 
+/* strptime library TODO extract component, as the license is different */
+#include "libob/strptime.h"
+
+// strcasestr, memmem
+
 // TODO expose a convenient "at" macro in libfatctl
 inline int utimens(const char* pathname, const struct timespec times[2]) { return 0; }
 inline int futimens(int fd, const struct timespec times[2]) { return 0; }
 inline int utimensat(int dirfd, const char* relpath, const struct timespec times[2], int flags) { return 0; }
 
+/* getline-compatible */
+#include <getline/getline.h>
+
+/* MOREINFO candidate for libsysroot? */
+inline int chroot(const char* path) { return -1; }
 
 // Get list of function prototypes for all enabled command_main() functions.
 
