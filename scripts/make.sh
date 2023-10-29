@@ -272,7 +272,7 @@ fi
 [ -n "$NOBUILD" ] && exit 0
 
 echo "Compile $OUTNAME"
-DOTPROG=.
+DOTPROG=
 
 # This is a parallel version of: do_loudly $BUILD lib/*.c $TOYFILES $LINK
 
@@ -296,15 +296,13 @@ do
   X=${i/lib\//lib_}
   X=${X##*/}
   OUT="$GENDIR/obj/${X%%.c}.o"
-  LNKFILES="$LNKFILES $OUT"
+# LNKFILES="$LNKFILES $OUT"
 
   # Library files don't get rebuilt if older than .config, but commands do.
-  [ "$OUT" -nt "$i" ] && [ -z "$CLICK" -o "$OUT" -nt "$KCONFIG_CONFIG" ] &&
-    continue
+  ( [ "$OUT" -nt "$i" ] && [ -z "$CLICK" -o "$OUT" -nt "$KCONFIG_CONFIG" ] && echo "+++ $OUT ($i) already built" || \
+    do_loudly $BUILD -c $i -o $OUT ) && LNKFILES="$LNKFILES $OUT" || echo ">>> $OUT ($i) failed to build -- skipping..."
 
-  do_loudly $BUILD -c $i -o $OUT &
-
-  ratelimit || break
+# ratelimit || break
 done
 
 # wait for all background jobs, detecting errors
