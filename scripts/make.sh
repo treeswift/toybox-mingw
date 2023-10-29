@@ -91,7 +91,10 @@ mkdir -p "$UNSTRIPPED"  "$(dirname $OUTNAME)" || exit 1
 
 [ -n "$V" ] && echo -e "\nWhich C files to build..."
 TOYFILES="$($SED -n 's/^CONFIG_\([^=]*\)=.*/\1/p' "$KCONFIG_CONFIG" | xargs | tr ' [A-Z]' '|[a-z]')"
+echo; echo "Matched the following source files (with reasons):"
+egrep -o "TOY[(]($TOYFILES)[ ,]" toys/*/*.c
 TOYFILES="main.c $(egrep -l "TOY[(]($TOYFILES)[ ,]" toys/*/*.c | xargs)"
+echo "TOYFILES=$TOYFILES"
 
 if [ "${TOYFILES/pending//}" != "$TOYFILES" ]
 then
