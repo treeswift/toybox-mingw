@@ -189,6 +189,11 @@ void xputc(char c)
 // note: restarts process from command_main()
 void xvdaemon(void)
 {
+#ifdef DISABLE_XVDAEMON
+  errno = ENOSYS;
+  perror("Can't daemonize");
+  exit(-1);
+#else
   int fd;
 
   // vfork and exec /proc/self/exe
@@ -207,6 +212,7 @@ void xvdaemon(void)
     close(fd);
   }
   dup2(0, 2);
+#endif
 }
 
 // This is called through the XVFORK macro because parent/child of vfork
@@ -774,8 +780,10 @@ struct group *xgetgrnam(char *name)
 
 void xsetuser(struct passwd *pwd)
 {
+#ifndef DISABLE_RUNAS
   if (initgroups(pwd->pw_name, pwd->pw_gid) || setgid(pwd->pw_uid)
       || setuid(pwd->pw_uid)) perror_exit("xsetuser '%s'", pwd->pw_name);
+#endif
 }
 
 // This can return null (meaning file not found).  It just won't return null
