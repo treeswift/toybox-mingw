@@ -132,6 +132,11 @@ long syscall(long number, ...) { return 0; }
 #include "lib/lsm.h"
 #include "lib/toyflags.h"
 
+/* contaminated above */
+#ifdef interface
+#undef interface
+#endif
+
 /* libmoregw headers */
 #include <fatctl/full.h>
 #include <wusers/wuser_eugid.h>
