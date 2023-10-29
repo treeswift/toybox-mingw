@@ -4,6 +4,8 @@
 
 source scripts/portability.sh
 
+OUTNAME=${OUTNAME:-toybox}
+
 [ -z "$PREFIX" ] && PREFIX="$PWD/install"
 
 # Parse command line arguments.
@@ -41,10 +43,10 @@ echo "${UNINSTALL:-Install} commands..."
 if [ -z "$UNINSTALL" ]
 then
   mkdir -p "${PREFIX}/${LONG_PATH}" &&
-  rm -f "${PREFIX}/${LONG_PATH}/toybox" &&
-  cp toybox"${TARGET:+-$TARGET}" ${PREFIX}/${LONG_PATH} || exit 1
+  rm -f "${PREFIX}/${LONG_PATH}/${OUTNAME}" &&
+  cp ${OUTNAME}"${TARGET:+-$TARGET}" ${PREFIX}/${LONG_PATH} || exit 1
 else
-  rm -f "${PREFIX}/${LONG_PATH}/toybox" 2>/dev/null
+  rm -f "${PREFIX}/${LONG_PATH}/${OUTNAME}" 2>/dev/null
 fi
 cd "$PREFIX" || exit 1
 
@@ -85,7 +87,7 @@ do
   # Create link
   if [ -z "$UNINSTALL" ]
   then
-    ln $DO_FORCE $LINK_TYPE ${DOTPATH}"toybox${TARGET:+-$TARGET}" $i || EXIT=1
+    ln $DO_FORCE $LINK_TYPE ${DOTPATH}"${OUTNAME}${TARGET:+-$TARGET}" $i${EXEEXT} || EXIT=1
   else
     rm -f $i || EXIT=1
   fi
