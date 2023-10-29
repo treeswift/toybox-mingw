@@ -120,6 +120,11 @@ long syscall(long number, ...) { return 0; }
 #include "lib/lib.h"
 #include "lib/lsm.h"
 #include "lib/toyflags.h"
+// TODO expose a convenient "at" macro in libfatctl
+inline int utimens(const char* pathname, const struct timespec times[2]) { return 0; }
+inline int futimens(int fd, const struct timespec times[2]) { return 0; }
+inline int utimensat(int dirfd, const char* relpath, const struct timespec times[2], int flags) { return 0; }
+
 
 // Get list of function prototypes for all enabled command_main() functions.
 
