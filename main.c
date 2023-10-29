@@ -5,6 +5,24 @@
 
 #include "toys.h"
 
+#include <sys/mman.h>
+#include <stdint.h>
+#if __has_include(<memmap/proc.h>)
+#include <memmap/proc.h>
+#else
+#include <unistd.h> /* getpagesize */
+#endif
+
+/* tell a good function pointer from a dangling weak link */
+int is_good_exec(void (*exec)(void)) {
+  uintptr_t page_size = getpagesize();
+  uintptr_t address = (uintptr_t)exec;
+  uintptr_t rem = address % page_size;
+  char in_core[2];
+  return mincore((void*)(address - rem), page_size, in_core) || in_core[0]; // "don't know" => "try anyway"
+  // a better function would be mquery() returning a PROT_* flag combo (or, namespacing, 'memmap_mquery()')
+}
+
 // Populate toy_list[].
 
 #undef NEWTOY
@@ -226,7 +244,9 @@ static void toy_exec_which(struct toy_list *which, char *argv[])
 
   // Run command
   toy_init(which, argv);
-  if (toys.which) toys.which->toy_main();
+  if (toys.which) 
+    if(is_good_exec(toys.which->toy_main)) toys.which->toy_main();
+    else help_exit("built w/errors; not linked");
   xexit();
 }
 
@@ -271,7 +291,8 @@ void toybox_main(void)
         for (j = 0; toy_paths[j]; j++)
           if (fl & (1<<j)) len += printf("%s", toy_paths[j]);
       }
-      len += printf("%s",toy_list[i].name);
+      char good = toy_list[i].toy_main ? '+' : '-';
+      len += printf("%c%s", good, toy_list[i].name);
       if (++len > width-15) len = 0;
       xputc(len ? ' ' : '\n');
     }
