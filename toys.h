@@ -37,10 +37,12 @@
 #include <sys/statvfs.h>
 #include <sys/time.h>
 #include <sys/times.h>
-#include <sys/utsname.h>
-#include <sys/wait.h>
-#include <syslog.h>
+#ifndef DISABLE_TERMINAL
 #include <termios.h>
+#else
+struct termios {};
+#endif
+
 #include <time.h>
 #include <unistd.h>
 #include <utime.h>

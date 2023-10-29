@@ -22,7 +22,11 @@ int tty_fd(void)
 
   for (i = 0; i<3; i++) if (isatty(j = (i+1)%3)) return j;
 
+#ifdef DISABLE_TERMINAL
+  return 0; /* stdin */
+#else
   return xnotstdio(open("/dev/tty", O_RDWR));
+#endif
 }
 
 // Query size of terminal (without ANSI probe fallback).
@@ -31,6 +35,9 @@ int tty_fd(void)
 
 int terminal_size(unsigned *xx, unsigned *yy)
 {
+#ifdef DISABLE_TERMINAL
+  return !xx || (*xx=80), !yy || (*yy=25), 1;
+#else
   struct winsize ws;
   unsigned i, x = 0, y = 0;
   char *s;
@@ -55,6 +62,7 @@ int terminal_size(unsigned *xx, unsigned *yy)
   if (yy && y) *yy = y;
 
   return x || y;
+#endif
 }
 
 // Query terminal size, sending ANSI probe if necesary. (Probe queries xterm
@@ -74,6 +82,7 @@ int terminal_probesize(unsigned *xx, unsigned *yy)
 
 void xsetspeed(struct termios *tio, int speed)
 {
+#ifndef DISABLE_TERMINAL
   int i, speeds[] = {50, 75, 110, 134, 150, 200, 300, 600, 1200, 1800, 2400,
                     4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800,
                     500000, 576000, 921600, 1000000, 1152000, 1500000, 2000000,
@@ -83,12 +92,16 @@ void xsetspeed(struct termios *tio, int speed)
   for (i = 0; i < ARRAY_LEN(speeds); i++) if (speeds[i] == speed) break;
   if (i == ARRAY_LEN(speeds)) error_exit("unknown speed: %d", speed);
   cfsetspeed(tio, i+1+4081*(i>15));
+#endif
 }
 
 
 // Reset terminal to known state, saving copy of old state if old != NULL.
 int set_terminal(int fd, int raw, int speed, struct termios *old)
 {
+#ifdef DISABLE_TERMINAL
+  return 0;
+#else
   struct termios termio;
   int i = tcgetattr(fd, &termio);
 
@@ -132,6 +145,7 @@ int set_terminal(int fd, int raw, int speed, struct termios *old)
   }
 
   return tcsetattr(fd, TCSAFLUSH, &termio);
+#endif
 }
 
 void xset_terminal(int fd, int raw, int speed, struct termios *old)
@@ -284,7 +298,9 @@ void start_redraw(unsigned *width, unsigned *height)
     *height = 25;
     set_terminal(0, 1, 0, 0);
     sigatexit(tty_sigreset);
+#ifdef SIGWINCH
     xsignal(SIGWINCH, generic_signal);
+#endif
   }
   if (toys.signal != -1) {
     toys.signal = -1;

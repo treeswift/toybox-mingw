@@ -54,8 +54,12 @@ int read_password(char *buf, int buflen, char *mesg)
 
   // Set NOP signal handler to return from the read.
   sigaction(SIGINT, &sa, &oldsa);
+#ifdef DISABLE_TERMINAL
+  fsync(tty);
+#else
   tcflush(tty, TCIFLUSH);
   xset_terminal(tty, 1, 0, &oldtermio);
+#endif
   dprintf(tty, "%s", mesg);
 
   // Loop assembling password. (Too long = fail)
@@ -71,7 +75,9 @@ int read_password(char *buf, int buflen, char *mesg)
   }
 
   // Restore terminal/signal state, terminate string
+#ifndef DISABLE_TERMINAL
   tcsetattr(0, TCSANOW, &oldtermio);
+#endif
   sigaction(SIGINT, &oldsa, 0);
   xputc('\n');
   buf[i*!ret] = 0;
