@@ -154,6 +154,13 @@ void *memmem(const void *haystack, size_t haystack_length,
   const void *needle, size_t needle_length);
 #endif // defined(glibc)
 
+#ifdef PROVIDE_WCWIDTH
+#include <wctype.h>
+inline int wcwidth(wchar_t wc) {
+  return iswprint(wc) > 0;
+}
+#endif
+
 #if !defined(__GLIBC__)
 // POSIX basename.
 #include <libgen.h>
