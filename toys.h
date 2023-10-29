@@ -77,6 +77,8 @@ struct statvfs {};
 #ifndef DISABLE_TIMES_H
 #include <sys/times.h>
 #endif
+// #include <sys/utsname.h> // figure out later
+/// #include <sys/wait.h> // rly?
 #include "syslog.h" // stub it!
 #ifndef DISABLE_TERMINAL
 #include <termios.h>
