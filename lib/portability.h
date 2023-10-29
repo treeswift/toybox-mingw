@@ -20,6 +20,10 @@
 #define st_atim st_atimespec
 #define st_ctim st_ctimespec
 #define st_mtim st_mtimespec
+#else // __MINGW32__
+#define st_atim st_atime
+#define st_ctim st_ctime
+#define st_mtim st_mtime
 #endif
 
 // For musl
