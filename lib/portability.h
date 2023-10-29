@@ -67,6 +67,25 @@
 // This lets us determine what libc we're using: systems that have <features.h>
 // will transitively include it, and ones that don't (macOS) won't break.
 #include <sys/types.h>
+#ifdef CONSUME_STDINT_H
+#include <stdint.h>
+
+#ifndef u_int8_t
+#define u_int8_t uint8_t
+#endif
+
+#ifndef u_int16_t
+#define u_int16_t uint16_t
+#endif
+
+#ifndef u_int32_t
+#define u_int32_t uint32_t
+#endif
+
+#ifndef u_int64_t
+#define u_int64_t uint64_t
+#endif
+#endif
 
 // Various constants old build environments might not have even if kernel does
 
