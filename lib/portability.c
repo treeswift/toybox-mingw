@@ -544,8 +544,10 @@ int dev_minor(int dev)
   return dev&0xffffff;
 #elif defined(__FreeBSD__) || defined(__OpenBSD__)
   return minor(dev);
+#elif defined(_WIN32)
+  return dev&0xffff;
 #else
-#error
+#error non-*nix device enumeration rules
 #endif
 }
 
@@ -557,8 +559,10 @@ int dev_major(int dev)
   return (dev>>24)&0xff;
 #elif defined(__FreeBSD__) || defined(__OpenBSD__)
   return major(dev);
+#elif defined(_WIN32)
+  return (dev>>16) & 0xffff;
 #else
-#error
+#error non-*nix device enumeration rules
 #endif
 }
 
@@ -570,8 +574,10 @@ int dev_makedev(int major, int minor)
   return (minor&0xffffff)|((major&0xff)<<24);
 #elif defined(__FreeBSD__) || defined(__OpenBSD__)
   return makedev(major, minor);
+#elif defined(_WIN32)
+  return (major<<16) | (minor&0xffff);
 #else
-#error
+#error non-*nix device enumeration rules
 #endif
 }
 
