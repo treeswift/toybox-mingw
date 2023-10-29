@@ -121,6 +121,13 @@ long syscall(long number, ...) { return 0; }
 #include "lib/lsm.h"
 #include "lib/toyflags.h"
 
+/* libmoregw headers */
+#include <fatctl/full.h>
+#include <wusers/wuser_eugid.h>
+inline int setsid() { return getpid(); }
+inline int setuid(uid_t uid) { return 0; }
+inline int setgid(gid_t gid) { return 0; }
+
 // FIXME implement [f]chown in libowners
 inline int fchown(int fd, uid_t owner, gid_t group) { return 0; }
 
