@@ -317,7 +317,9 @@ struct statfs {
 #ifdef __APPLE__
 #include <util.h>
 #elif !defined(__FreeBSD__) && !defined(__OpenBSD__)
+#ifndef DISABLE_TELNETD
 #include <pty.h>
+#endif
 #else
 #include <termios.h>
 #ifndef IUTF8
