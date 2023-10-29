@@ -1,3 +1,6 @@
+#ifndef _PORTABILITY_H_
+#define _PORTABILITY_H_
+
 // Workarounds for horrible build environment idiosyncrasies.
 
 // Instead of polluting the code with strange #ifdefs to work around bugs
@@ -478,3 +481,4 @@ int timer_settime_wrap(timer_t t, int flags, struct itimerspec *val,
 #define _CRTIMP
 #endif
 
+#endif
