@@ -62,7 +62,11 @@ inline char* strndup(const char *src, size_t atmost) {
 #endif
 #include <strings.h>
 #include <sys/mman.h>
+#ifdef PROVIDE_RESOURCE_H
+#include "sys_resource.h"
+#else
 #include <sys/resource.h>
+#endif
 #include <sys/stat.h>
 #include <sys/statvfs.h>
 #include <sys/time.h>
