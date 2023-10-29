@@ -13,9 +13,10 @@ then
   [ ! -z "$(command -v gsed 2>/dev/null)" ] && SED=gsed || SED=sed
 fi
 
-CFLAGS+=" `cat adhoc-cflags | grep -v '^#'`"
-LFLAGS+=" `cat adhoc-lflags | grep -v '^#'`"
-echo "$LFLAGS" > "$GENDIR/optlibs.dat"
+ADCFLAGS="`grep -v '^#' adhoc-cflags`"; CFLAGS+=" `echo $ADCFLAGS`"
+ADLFLAGS="`grep -v '^#' adhoc-lflags`"; LDFLAGS+=" `echo $ADLFLAGS`"
+echo "ad-hoc CFLAGS=$CFLAGS"
+echo "ad-hoc LDFLAGS=$LDFLAGS"
 
 # Tell linker to do dead code elimination at function level
 if [ "$(uname)" == "Darwin" ]
