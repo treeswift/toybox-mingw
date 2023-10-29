@@ -28,7 +28,11 @@
 
 // For musl
 #define _ALL_SOURCE
+#ifdef CONSUME_PCRE2_H
+#include <pcre2posix.h> /* unguarded header! */
+#else
 #include <regex.h>
+#endif
 #ifndef REG_STARTEND
 #define REG_STARTEND 0
 #endif

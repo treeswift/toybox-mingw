@@ -26,7 +26,7 @@
 #include <paths.h>
 #endif
 #include <pwd.h>
-#include <regex.h>
+/* portability.h includes regex... or its replacement */
 #include <sched.h>
 #include <setjmp.h>
 #define sigjmp_buf jmp_buf /* ad hoc. must break a lot */
