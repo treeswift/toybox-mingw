@@ -83,7 +83,9 @@ struct termios {};
 
 // Internationalization support (also in POSIX)
 
-#include <langinfo.h>
+#ifndef DISABLE_LOCALE
+// #include <langinfo.h> // provide, don't use plibc's
+#endif
 #include <locale.h>
 #include <wchar.h>
 #include <wctype.h>
