@@ -62,7 +62,7 @@ void hostname_main(void)
   // We only do the DNS lookup for -d and -f.
   if (FLAG(d) || FLAG(f)) {
     if (!(h = gethostbyname(toybuf)))
-      error_exit("gethostbyname: %s", hstrerror(h_errno));
+      error_exit("gethostbyname: %lu", hstrerror(h_errno));
     snprintf(toybuf, sizeof(toybuf), "%s", h->h_name);
   }
   dot = toybuf+strcspn(toybuf, ".");
