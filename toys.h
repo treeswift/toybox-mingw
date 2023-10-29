@@ -120,6 +120,19 @@ long syscall(long number, ...) { return 0; }
 #include "lib/lib.h"
 #include "lib/lsm.h"
 #include "lib/toyflags.h"
+/* silverware */
+inline int vfork() { return -1; }
+// TODO fork()
+
+/* start of waitpid constants */
+#define WIFEXITED(status)   0
+#define WEXITSTATUS(status) 0
+#define WTERMSIG(status) SIGINT
+/* end of waitpid constants */
+inline pid_t waitpid(pid_t pid, int *wstatus, int options) { return -1; }
+inline int pipe(int pipefd[2]) { return _pipe(pipefd, 4096, _O_BINARY); }
+inline int kill(pid_t pid, int sig) { return errno = ENOSYS, -1; } // TODO TerminateThread
+
 // TODO expose a convenient "at" macro in libfatctl
 inline int utimens(const char* pathname, const struct timespec times[2]) { return 0; }
 inline int futimens(int fd, const struct timespec times[2]) { return 0; }
