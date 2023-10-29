@@ -247,8 +247,8 @@ static void print_struct(long addr)
         "st_nlink=%ld, st_uid=%d, st_gid=%d, st_blksize=%ld, st_blocks=%ld, "
         "st_size=%lld, st_atime=%ld, st_mtime=%ld, st_ctime=%ld}",
         dev_major(sb.st_dev), dev_minor(sb.st_dev), sb.st_ino, sb.st_mode,
-        (long) sb.st_nlink, sb.st_uid, sb.st_gid, (long) sb.st_blksize,
-        sb.st_blocks, (long long)sb.st_size, sb.st_atime, sb.st_mtime,
+        (long) sb.st_nlink, sb.st_uid, sb.st_gid, (long) BLKSIZE(sb),
+        BLK_CNT(sb), (long long)sb.st_size, sb.st_atime, sb.st_mtime,
         sb.st_ctime);
     } else {
       fprintf(stderr, "{st_mode=%o, st_size=%lld, ...}", sb.st_mode,

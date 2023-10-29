@@ -454,7 +454,7 @@ static void listfiles(int dirfd, struct dirtree *indir)
     char et = endtype(st), *ss;
 
     // If we couldn't stat, output ? for most fields
-    zap = !st->st_blksize && !st->st_dev && !st->st_ino;
+    zap = !st->st_canary && !st->st_dev && !st->st_ino;
 
     // Skip directories at the top of the tree when -d isn't set
     if (S_ISDIR(mode) && !indir->parent && !FLAG(d)) continue;

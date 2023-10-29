@@ -191,11 +191,55 @@ void *memmem(const void *haystack, size_t haystack_length,
 #endif
 
 // Linux headers not listed by POSIX or LSB
-#include <sys/mount.h>
 #ifdef __linux__
+#include <sys/mount.h>
 #include <sys/statfs.h>
 #include <sys/swap.h>
 #include <sys/sysinfo.h>
+#elif defined(__FreeBSD__) || defined(__OpenBSD__)
+#include <sys/statfs.h>
+#else
+/* Defined according to OpenBSD man 2 statfs */
+
+typedef struct { int32_t val[2]; } fsid_t;
+
+#define MFSNAMELEN   16 /* length of fs type name, including nul */
+#define MNAMELEN     90	/* length of buffer for returned name */
+
+union mount_info {
+  /* TODO support: fat32, ntfs, exfat, samba */
+    char __align[256];
+};
+
+typedef uint32_t ulong; // DWORD
+
+struct statfs {
+    ulong f_type;
+    ulong f_bsize;
+    off_t f_blocks;
+    off_t f_bfree;
+    off_t f_bavail;
+    off_t f_files;
+    off_t f_ffree;
+    ulong f_fsid;
+    ulong f_namelen;
+    ulong f_frsize;
+    ulong f_flags;
+    ulong f_spare[4];
+};
+
+ /* Some Linux specific concept; emulating it with nearest for now */
+#define f_frsize f_bsize
+#ifdef DISABLE_STAT_BLKSIZE
+#define st_canary st_mtime
+#define BLKSIZE(st) 512
+#define BLK_CNT(st) ((511l + st->st_size) >> 9)
+#else
+#define st_canary st_blksize
+#define BLKSIZE(st) (st->st_blksize)
+#define BLK_CNT(st) (st->st_blocks)
+#endif
+
 #endif
 
 #ifdef __APPLE__
