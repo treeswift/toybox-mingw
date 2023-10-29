@@ -12,6 +12,8 @@ if [ -z "$SED" ]
 then
   [ ! -z "$(command -v gsed 2>/dev/null)" ] && SED=gsed || SED=sed
 fi
+
+CFLAGS+=" `cat adhoc-cflags | grep -v '^#'`"
 LFLAGS+=" `cat adhoc-lflags | grep -v '^#'`"
 echo "$LFLAGS" > "$GENDIR/optlibs.dat"
 
