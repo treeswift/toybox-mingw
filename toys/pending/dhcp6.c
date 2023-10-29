@@ -40,7 +40,7 @@ config DHCP6
 #include <netinet/ip6.h>
 #include <netinet/udp.h>
 #include <linux/if_packet.h>
-#include <syslog.h>
+#include "syslog.h"
 
 GLOBALS(
   char *interface_name, *pidfile, *script;
