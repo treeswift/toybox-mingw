@@ -73,13 +73,25 @@ struct termios {};
 // Posix networking
 
 #include <arpa/inet.h>
-#include <netdb.h>
-#include <net/if.h>
+// #include <netdb.h> // ws2fwd?
+// #include <net/if.h> // ws2fwd?
 #include <netinet/in.h>
-#include <netinet/tcp.h>
-#include <poll.h>
+// #include <netinet/tcp.h> //-"-
+// #include <poll.h> // ?
 #include <sys/socket.h>
-#include <sys/un.h>
+// #include <sys/un.h> // ?
+#define hstrerror(no) (DWORD)(no)
+
+/* the below should be provided by unistd.h, what the...? */
+#ifndef SHUT_RD
+#define SHUT_RD SD_RECEIVE
+#endif
+#ifndef SHUT_WR
+#define SHUT_WR SD_SEND
+#endif
+#ifndef SHUT_RDWR
+#define SHUT_RDWR SD_BOTH
+#endif
 
 // Internationalization support (also in POSIX)
 
