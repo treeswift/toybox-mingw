@@ -12,6 +12,8 @@ if [ -z "$SED" ]
 then
   [ ! -z "$(command -v gsed 2>/dev/null)" ] && SED=gsed || SED=sed
 fi
+LFLAGS+=" `cat adhoc-lflags | grep -v '^#'`"
+echo "$LFLAGS" > "$GENDIR/optlibs.dat"
 
 # Tell linker to do dead code elimination at function level
 if [ "$(uname)" == "Darwin" ]

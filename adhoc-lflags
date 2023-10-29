@@ -1,0 +1,10 @@
+# early development/integration
+-Wl,/errorlimit:0 -Wl,--allow-multiple-definition
+# autodetected by Toybox itself
+-lcrypt -lm -lcrypto -lz -liconv -lssl
+# standard Windows libraries
+-lkernel32 -lshlwapi -lwsock32 -lws2_32 -lcrypt32 -luserenv
+# POSIX add-ons provided by MinGW
+-lpthread
+# MoreGW: https://github.com/treeswift/libmoregw
+-lwusers -lfatctl -lmemmap -lpcre2-posix -lglob -lgetline -lstrptime
