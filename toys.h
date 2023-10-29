@@ -18,7 +18,11 @@
 #include <inttypes.h>
 #include <limits.h>
 #include <math.h>
+#ifdef PROVIDE_PATHS_H
+#include "paths.h"
+#else
 #include <paths.h>
+#endif
 #include <pwd.h>
 #include <regex.h>
 #include <sched.h>
