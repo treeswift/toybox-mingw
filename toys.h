@@ -68,7 +68,11 @@ inline char* strndup(const char *src, size_t atmost) {
 #include <sys/resource.h>
 #endif
 #include <sys/stat.h>
+#ifndef DISABLE_STATVFS_H
 #include <sys/statvfs.h>
+#else
+struct statvfs {};
+#endif
 #include <sys/time.h>
 #include <sys/times.h>
 #include "syslog.h" // stub it!
