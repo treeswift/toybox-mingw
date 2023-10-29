@@ -93,6 +93,7 @@ struct mtab_list *xgetmountlist(char *path)
   return mtlist;
 }
 
+#elif __MINGW32__ /* Also consider a pure WinAPI version... */
 #else
 
 #include <mntent.h>
