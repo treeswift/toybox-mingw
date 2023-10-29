@@ -89,8 +89,12 @@ struct termios {};
 #include <wctype.h>
 
 // Non-posix headers
-#include <sys/ioctl.h>
-#include <sys/syscall.h>
+// #include <sys/ioctl.h> // figure out later
+inline int ioctl(int fd, unsigned long request, ...) { return 0; }
+// TODO enumerate ioctls
+// #include <sys/syscall.h> // figure out later
+long syscall(long number, ...) { return 0; }
+// TODO enumerate syscalls
 
 #include "lib/lib.h"
 #include "lib/lsm.h"
