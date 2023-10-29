@@ -44,7 +44,8 @@ static int xconnbind(struct addrinfo *ai_arg, int dobind)
 
   // Try all the returned addresses. Report errors if last entry can't connect.
   for (ai = ai_arg; ai; ai = ai->ai_next) {
-    fd = (ai->ai_next ? socket : xsocket)(ai->ai_family, ai->ai_socktype,
+    fd = ai->ai_next ? socket(ai->ai_family, ai->ai_socktype,
+      ai->ai_protocol) : xsocket(ai->ai_family, ai->ai_socktype,
       ai->ai_protocol);
     xsetsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
     if (!(dobind ? bind : connect)(fd, ai->ai_addr, ai->ai_addrlen)) break;
@@ -76,6 +77,40 @@ void xconnect(int fd, const struct sockaddr *sa, socklen_t len)
 {
   if (connect(fd, sa, len)) perror_exit("connect");
 }
+
+#ifdef PROVIDE_POLL
+int poll(struct pollfd *fds, int nfds, int timeout) {
+  if(nfds > FD_SETSIZE) return -1;
+  struct timeval tv;
+  tv.tv_sec = timeout / 1000;
+  tv.tv_usec = (timeout % 1000) * 1000;
+  enum { rd = 0, wr, xc, ct };
+  struct fd_set* sets = calloc(ct, sizeof(fd_set));
+  for(int i = 0; i < ct; ++i) {
+    FD_ZERO(&sets[i]);
+  }
+  for(int j = 0; j < nfds; ++j) {
+    int fd = fds[j].fd;
+    short events = fds[j].events;
+    if(events & POLLIN)
+      FD_SET(fd, &sets[rd]);
+    if(events & POLLOUT)
+      FD_SET(fd, &sets[wr]);
+    FD_SET(fd, &sets[xc]); // POLLERR, POLLHUP, POLLNVAL, POLLPRI, POLLRDHUP
+  }
+  int count = select(nfds, &sets[rd], &sets[wr], &sets[xc], &tv);
+  for(int j = 0; j < nfds; ++j) {
+    int fd = fds[j].fd;
+    short revents = 0;
+    if(FD_ISSET(fd, &sets[rd])) revents |= POLLIN;
+    if(FD_ISSET(fd, &sets[wr])) revents |= POLLOUT;
+    if(FD_ISSET(fd, &sets[xc])) revents |= POLLHUP; // we need _some_ errcode
+    fds[j].revents = revents;
+  }
+  free(sets);
+  return count;
+}
+#endif
 
 int xpoll(struct pollfd *fds, int nfds, int timeout)
 {
