@@ -38,6 +38,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef PROVIDE_STPCPY
+inline char* stpcpy(char* dest, const char* src) {
+  const size_t len = strlen(src);
+  return strcpy(dest, src) + len;
+}
+#endif
+#ifdef PROVIDE_STRNDUP
+inline char* strndup(const char *src, size_t atmost) {
+  char* trg = malloc(atmost + 1); // '\0'
+  if(trg) {
+    strncpy(trg, src, atmost);
+  }
+  return trg;
+}
+#endif
 #include <strings.h>
 #include <sys/mman.h>
 #include <sys/resource.h>
