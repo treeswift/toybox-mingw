@@ -49,11 +49,19 @@ int get_salt(char *salt, char *algo)
 int read_password(char *buf, int buflen, char *mesg)
 {
   struct termios oldtermio;
+#ifdef DISABLE_SIGACTION
+  sighandler_t oldsh;
+#else
   struct sigaction sa = {.sa_handler = generic_signal}, oldsa;
+#endif
   int i, tty = tty_fd(), ret = 1;
 
   // Set NOP signal handler to return from the read.
+#ifdef DISABLE_SIGACTION
+  oldsh = signal(SIGINT, &generic_signal);
+#else
   sigaction(SIGINT, &sa, &oldsa);
+#endif
 #ifdef DISABLE_TERMINAL
   fsync(tty);
 #else
@@ -78,7 +86,11 @@ int read_password(char *buf, int buflen, char *mesg)
 #ifndef DISABLE_TERMINAL
   tcsetattr(0, TCSANOW, &oldtermio);
 #endif
+#ifdef DISABLE_SIGACTION
+  signal(SIGINT, oldsh);
+#else
   sigaction(SIGINT, &oldsa, 0);
+#endif
   xputc('\n');
   buf[i*!ret] = 0;
 

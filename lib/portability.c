@@ -400,43 +400,71 @@ int posix_fallocate(int fd, off_t offset, off_t length)
 // Signals required by POSIX 2008:
 // http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/signal.h.html
 
-#define SIGNIFY(x) {SIG##x, #x}
+#define SIGNIFY(x) {SIG##x, #x},
 
 static const struct signame signames[] = {
   {0, "0"},
+#ifdef _WIN32
+  SIGNIFY(INT)
+  SIGNIFY(ILL)
+  SIGNIFY(ABRT_COMPAT)
+  SIGNIFY(FPE)
+  SIGNIFY(SEGV)
+  SIGNIFY(TERM)
+  SIGNIFY(BREAK)
+  SIGNIFY(ABRT)
+  SIGNIFY(ABRT2)
+
+#ifdef _POSIX
+  SIGNIFY(HUP)
+  SIGNIFY(QUIT)
+  SIGNIFY(TRAP)
+  //SIGNIFY(TRAP)
+  //SIGNIFY(IOT)
+  //SIGNIFY(EMT)
+  SIGNIFY(KILL)
+  SIGNIFY(BUS)
+  SIGNIFY(SYS)
+  SIGNIFY(PIPE)
+#ifdef __USE_MINGW_ALARM
+  SIGNIFY(ALRM)
+#endif /* __USE_MINGW_ALARM */
+#endif /* _POSIX */
+#else /* !_WIN32 */
   // POSIX
-  SIGNIFY(ABRT), SIGNIFY(ALRM), SIGNIFY(BUS),
-  SIGNIFY(FPE), SIGNIFY(HUP), SIGNIFY(ILL), SIGNIFY(INT), SIGNIFY(KILL),
-  SIGNIFY(PIPE), SIGNIFY(QUIT), SIGNIFY(SEGV), SIGNIFY(TERM),
-  SIGNIFY(USR1), SIGNIFY(USR2), SIGNIFY(SYS), SIGNIFY(TRAP),
-  SIGNIFY(VTALRM), SIGNIFY(XCPU), SIGNIFY(XFSZ),
+  SIGNIFY(ABRT) SIGNIFY(ALRM) SIGNIFY(BUS)
+  SIGNIFY(FPE) SIGNIFY(HUP) SIGNIFY(ILL) SIGNIFY(INT) SIGNIFY(KILL)
+  SIGNIFY(PIPE) SIGNIFY(QUIT) SIGNIFY(SEGV) SIGNIFY(TERM)
+  SIGNIFY(USR1) SIGNIFY(USR2) SIGNIFY(SYS) SIGNIFY(TRAP)
+  SIGNIFY(VTALRM) SIGNIFY(XCPU) SIGNIFY(XFSZ)
   // Non-POSIX signals that cause termination
-  SIGNIFY(PROF), SIGNIFY(IO),
+  SIGNIFY(PROF) SIGNIFY(IO)
   // signals only present/absent on some targets (mips and macos)
 #ifdef SIGEMT
-  SIGNIFY(EMT),
+  SIGNIFY(EMT)
 #endif
 #ifdef SIGINFO
-  SIGNIFY(INFO),
+  SIGNIFY(INFO)
 #endif
 #ifdef SIGPOLL
-  SIGNIFY(POLL),
+  SIGNIFY(POLL)
 #endif
 #ifdef SIGPWR
-  SIGNIFY(PWR),
+  SIGNIFY(PWR)
 #endif
 #ifdef SIGSTKFLT
-  SIGNIFY(STKFLT),
+  SIGNIFY(STKFLT)
 #endif
 
   // Note: sigatexit relies on all the signals with a default disposition that
   // terminates the process coming *before* SIGCHLD.
 
   // POSIX signals that don't cause termination
-  SIGNIFY(CHLD), SIGNIFY(CONT), SIGNIFY(STOP), SIGNIFY(TSTP),
-  SIGNIFY(TTIN), SIGNIFY(TTOU), SIGNIFY(URG),
+  SIGNIFY(CHLD) SIGNIFY(CONT) SIGNIFY(STOP) SIGNIFY(TSTP)
+  SIGNIFY(TTIN) SIGNIFY(TTOU) SIGNIFY(URG)
   // Non-POSIX signals that don't cause termination
-  SIGNIFY(WINCH),
+  SIGNIFY(WINCH)
+#endif /* _WIN32 */
 };
 
 #undef SIGNIFY

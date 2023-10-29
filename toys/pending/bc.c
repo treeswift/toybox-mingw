@@ -5817,6 +5817,11 @@ void bc_main(void)
   BcStatus s = 0;
   char *ss;
 
+#ifdef DISABLE_SIGACTION
+  signal(SIGINT, &bc_vm_sig);
+  signal(SIGTERM, &bc_vm_sig);
+  sigaction(SIGQUIT, &bc_vm_sig);
+#else
   struct sigaction sa;
 
   sigemptyset(&sa.sa_mask);
@@ -5825,6 +5830,7 @@ void bc_main(void)
   sigaction(SIGINT, &sa, NULL);
   sigaction(SIGTERM, &sa, NULL);
   sigaction(SIGQUIT, &sa, NULL);
+#endif
 
   TT.line_len = 69;
   ss = getenv("BC_LINE_LENGTH");

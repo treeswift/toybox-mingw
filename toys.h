@@ -23,6 +23,8 @@
 #include <regex.h>
 #include <sched.h>
 #include <setjmp.h>
+#define sigjmp_buf jmp_buf /* ad hoc. must break a lot */
+#define siglongjmp longjmp /* -"- "*/
 #include <signal.h>
 #include <stdarg.h>
 #include <stddef.h>

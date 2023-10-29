@@ -47,7 +47,11 @@ static int validate_password(char *pwd)
   sa.sa_handler = timeout_handle;
 
   if(TT.timeout) {
+#ifdef DISABLE_SIGACTION
+    signal(SIGALRM, &timeout_handle);
+#else
     sigaction(SIGALRM, &sa, NULL);
+#endif
     alarm(TT.timeout);
   }
 

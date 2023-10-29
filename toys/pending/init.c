@@ -244,16 +244,20 @@ static pid_t final_run(struct action_list_seed *x)
   int fd;
   sigset_t signal_set;
 
+#ifndef DISABLE_SIGPROCMASK
   sigfillset(&signal_set);
   sigprocmask(SIG_BLOCK, &signal_set, NULL);
+#endif
   if (x->action & ASKFIRST) pid = fork();
   else pid = vfork();
 
   if (pid > 0) {
     //parent process or error
     //unblock the signals
+#ifndef DISABLE_SIGPROCMASK
     sigfillset(&signal_set);
     sigprocmask(SIG_UNBLOCK, &signal_set, NULL);
+#endif
 
     return pid;      
   } else if (pid < 0) {
@@ -264,8 +268,10 @@ static pid_t final_run(struct action_list_seed *x)
 
   //new born child process
   sigset_t signal_set_c;
+#ifndef DISABLE_SIGPROCMASK
   sigfillset(&signal_set_c);
   sigprocmask(SIG_UNBLOCK, &signal_set_c, NULL);
+#endif
   setsid(); //new session
 
   if (x->terminal_name[0]) {

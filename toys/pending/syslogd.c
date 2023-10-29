@@ -507,10 +507,12 @@ init_jumpin:
           logmsg("<46>syslogd exiting", 19);
           if (CFG_TOYBOX_FREE ) cleanup();
           signal(sig, SIG_DFL);
+#ifndef DISABLE_SIGPROCMASK
           sigset_t ss;
           sigemptyset(&ss);
           sigaddset(&ss, sig);
           sigprocmask(SIG_UNBLOCK, &ss, NULL);
+#endif
           raise(sig);
           _exit(1);  /* Should not reach it */
           break;

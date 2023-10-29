@@ -906,8 +906,10 @@ void exit_signal(int sig)
   sigset_t sigset;
 
   if (sig) toys.exitval = sig|128;
+#ifndef DISABLE_SIGPROCMASK
   sigfillset(&sigset);
   sigprocmask(SIG_BLOCK, &sigset, 0);
+#endif
   xexit();
 }
 

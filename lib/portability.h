@@ -439,6 +439,12 @@ struct signame {
 };
 void xsignal_all_killers(void *handler);
 
+// FIXME emulate sigaction with signal
+typedef void (*sighandler_t)(int);
+#ifndef SIGCHLD
+#define SIGCHLD 0
+#endif
+
 // Different OSes encode major/minor device numbers differently.
 int dev_minor(int dev);
 int dev_major(int dev);

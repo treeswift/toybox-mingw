@@ -987,15 +987,19 @@ char *xtzset(char *new)
 }
 
 // Set a signal handler
-void xsignal_flags(int signal, void *handler, int flags)
+void xsignal_flags(int signo, void *handler, int flags)
 {
+#ifdef DISABLE_SIGACTION
+  if(SIG_ERR == signal(signo, (sighandler_t)handler)) perror_exit("xsignal %d", signo);
+#else
   struct sigaction *sa = (void *)libbuf;
 
   memset(sa, 0, sizeof(struct sigaction));
   sa->sa_handler = handler;
   sa->sa_flags = flags;
 
-  if (sigaction(signal, sa, 0)) perror_exit("xsignal %d", signal);
+  if (sigaction(signo, sa, 0)) perror_exit("xsignal %d", signo);
+#endif
 }
 
 void xsignal(int signal, void *handler)
