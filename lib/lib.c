@@ -1133,7 +1133,7 @@ void names_to_pid(char **names, int (*callback)(pid_t pid, char *name),
   DIR *dp;
   struct dirent *entry;
 
-  if (!(dp = opendir("/proc"))) perror_exit("no /proc");
+  if (!(dp = opendir("/proc"))) perror_exit("no /proc"); //FIXME:DISABLE_PROCFS
 
   while ((entry = readdir(dp))) {
     unsigned u = atoi(entry->d_name);
