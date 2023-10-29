@@ -8,3 +8,7 @@ kconfig/conf
 kconfig/*.c
 toybox
 toybox_unstripped
+toybox.exe
+toybox_unstripped.exe
+.vscode
+install
