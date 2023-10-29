@@ -334,7 +334,7 @@ ssize_t xattr_fset(int fd, const char* name,
   return fsetxattr(fd, name, value, size, 0, flags);
 }
 
-#elif !defined(__FreeBSD__) && !defined(__OpenBSD__)
+#elif !defined(__FreeBSD__) && !defined(__OpenBSD__) && !defined(DISABLE_XATTR)
 
 ssize_t xattr_get(const char *path, const char *name, void *value, size_t size)
 {

@@ -347,6 +347,9 @@ ssize_t xattr_flist(int, char *, size_t);
 ssize_t xattr_set(const char*, const char*, const void*, size_t, int);
 ssize_t xattr_lset(const char*, const char*, const void*, size_t, int);
 ssize_t xattr_fset(int, const char*, const void*, size_t, int);
+#else
+#define DISABLE_XATTR 1
+//FIXME libxxxattr
 #endif
 
 #if defined(__APPLE__)
