@@ -1058,7 +1058,7 @@ void xparsedate(char *str, time_t *t, unsigned *nano, int endian)
 
   // Try each format
   for (i = 0; i<ARRAY_LEN(formats); i++) {
-    localtime_r(&now, &tm);
+    localtime_s(&tm, &now);
     tm.tm_hour = tm.tm_min = tm.tm_sec = 0;
     tm.tm_isdst = -endian;
 
