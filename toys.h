@@ -37,6 +37,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+/* Windows */
+#include <io.h>
 #include <string.h>
 #ifdef PROVIDE_STPCPY
 inline char* stpcpy(char* dest, const char* src) {
