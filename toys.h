@@ -4,6 +4,8 @@
  */
 
 // Stuff that needs to go before the standard headers
+#ifndef _TOYS_H_
+#define _TOYS_H_
 
 #include "generated/config.h"
 #include "lib/portability.h"
@@ -148,4 +150,6 @@ extern char **environ, *toybox_version, toybuf[4096], libbuf[4096];
 #define TOYBOX_VENDOR ""
 #endif
 #define TOYBOX_VERSION "0.8.10"TOYBOX_VENDOR
+#endif
+
 #endif
