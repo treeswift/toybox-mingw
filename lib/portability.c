@@ -217,6 +217,26 @@ int xnotify_wait(struct xnotify *not, char **path)
   }
 }
 
+#elif __MINGW32__ /* Also consider a pure WinAPI version... */
+
+struct xnotify *xnotify_init(int max)
+{
+  perror_exit("xnotify_init not supported");
+  return 0;
+}
+
+int xnotify_add(struct xnotify *not, int fd, char *path)
+{
+  perror_exit("xnotify_add not supported");
+  return -1;
+}
+
+int xnotify_wait(struct xnotify *not, char **path)
+{
+  perror_exit("xnotify_wait not supported");
+  return -1;
+}
+
 #else
 
 #include <sys/inotify.h>
