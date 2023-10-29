@@ -3,6 +3,9 @@
 #include "toys.h"
 
 // In libc, populated by start code, used by getenv() and exec() and friends.
+#ifdef _WIN32
+_CRTIMP 
+#endif
 extern char **environ;
 
 // Returns the number of bytes taken by the environment variables. For use
