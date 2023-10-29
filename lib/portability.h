@@ -189,6 +189,41 @@ void *memmem(const void *haystack, size_t haystack_length,
 #define bswap_32(x) bswap32(x)
 #define bswap_64(x) bswap64(x)
 
+#elif PROVIDE_BYTESWAP
+
+/* IS_BIG_ENDIAN is provided via CFLAGS */
+
+#define __BSWAP_LOBYTES 0x00ff00ff
+#define __BSWAP_LOWORDS 0x0000ffff
+#define __BSWAP_LODWORD 0xffffffffL
+
+#if __has_builtin(__builtin_bswap16)
+  #define bswap_16(x) __builtin_bswap16(x)
+#else
+  inline bswap_16(unsigned x) {
+    return ((x & __BSWAP_LOBYTES) << 8) | ((x >> 8) & __BSWAP_LOBYTES);
+  }
+#endif
+
+#if __has_builtin(__builtin_bswap32)
+  #define bswap_32(x) __builtin_bswap32(x)
+#else
+  inline bswap_32(unsigned x) {
+    unsigned y = bswap_16(x);
+    return ((y & __BSWAP_LOWORDS) << 8) | ((y >> 8) & __BSWAP_LOWORDS);
+  }
+#endif
+
+#if __has_builtin(__builtin_bswap64)
+  #define bswap_64(x) __builtin_bswap32(x)
+#else
+  inline bswap_32(uint64_t x) {
+    uint64_t hi = bswap_32((x & __BSWAP_LODWORD)) << 32;
+    uint64_t lo = bswap_32((x >> 32) & __BSWAP_LODWORD);
+    return lo | hi;
+  }
+#endif
+
 #else
 
 #include <byteswap.h>
