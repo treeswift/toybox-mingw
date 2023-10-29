@@ -137,7 +137,8 @@ extern struct toy_context {
 
 // Two big temporary buffers: one for use by commands, one for library functions
 
-extern char **environ, *toybox_version, toybuf[4096], libbuf[4096];
+_CRTIMP extern char **environ;
+extern char *toybox_version, toybuf[4096], libbuf[4096];
 
 #define FLAG(x) (!!(toys.optflags&FLAG_##x))  // Return 1 if flag set, 0 if not
 

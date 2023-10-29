@@ -473,3 +473,8 @@ int timer_settime_wrap(timer_t t, int flags, struct itimerspec *val,
   struct itimerspec *old);
 #define timer_settime(...) timer_settime_wrap(__VA_ARGS__)
 #endif
+
+#ifndef _CRTIMP
+#define _CRTIMP
+#endif
+
