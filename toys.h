@@ -62,6 +62,10 @@ inline char* strndup(const char *src, size_t atmost) {
 #endif
 #include <strings.h>
 #include <sys/mman.h>
+#ifndef _SC_PAGESIZE
+#include "memmap/proc.h"
+#define sysconf memmap_sysconf
+#endif
 #ifdef PROVIDE_RESOURCE_H
 #include "sys_resource.h"
 #else
