@@ -7,4 +7,4 @@
 # POSIX add-ons provided by MinGW
 -lpthread
 # MoreGW: https://github.com/treeswift/libmoregw
--lwusers -lfatctl -lmemmap -lpcre2-posix -lglob -lgetline -lstrptime
+-lwusers -lfatctl -lprefix -lmemmap -lpcre2-posix -lglob -lgetline -lstrptime
