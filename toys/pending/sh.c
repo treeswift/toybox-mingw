@@ -1347,7 +1347,7 @@ static int run_subshell(char *str, int len)
   pid_t pid;
 //dprintf(2, "%d run_subshell %.*s\n", getpid(), len, str); debug_show_fds();
   // The with-mmu path is significantly faster.
-  if (CFG_TOYBOX_FORK) {
+#if CFG_TOYBOX_FORK
     if ((pid = fork())<0) perror_msg("fork");
     else if (!pid) {
       call_function();
@@ -1358,7 +1358,7 @@ static int run_subshell(char *str, int len)
     }
 
   // On nommu vfork, exec /proc/self/exe, and pipe state data to ourselves.
-  } else {
+#else // CFG_TOYBOX_FORK
     int pipes[2];
     unsigned i;
     char **oldenv = environ, *ss = str ? : pl2str(TT.ff->pl->next, 0);
@@ -1394,7 +1394,7 @@ static int run_subshell(char *str, int len)
     dprintf(pipes[1], "0 0\n%.*s\n", len, ss);
     if (!str) free(ss);
     close(pipes[1]);
-  }
+#endif // CFG_TOYBOX_FORK
 
   return pid;
 }
