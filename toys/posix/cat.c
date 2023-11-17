@@ -4,7 +4,7 @@
  *
  * See http://opengroup.org/onlinepubs/9699919799/utilities/cat.html
 
-USE_CAT(NEWTOY(cat, "uvte", TOYFLAG_BIN))
+USE_CAT(NEWTOY(cat, "uvte", TOYFLAG_BIN|TOYFLAG_GOOD))
 
 config CAT
   bool "cat"

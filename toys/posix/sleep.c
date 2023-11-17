@@ -5,7 +5,7 @@
  *
  * See http://opengroup.org/onlinepubs/9699919799/utilities/sleep.html
 
-USE_SLEEP(NEWTOY(sleep, "<1", TOYFLAG_BIN))
+USE_SLEEP(NEWTOY(sleep, "<1", TOYFLAG_BIN|TOYFLAG_GOOD))
 
 config SLEEP
   bool "sleep"

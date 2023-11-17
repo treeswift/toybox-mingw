@@ -2,7 +2,7 @@
  *
  * Copyright 2012 Elie De Brauwer <eliedebrauwer@gmail.com>
 
-USE_USLEEP(NEWTOY(usleep, "<1>1", TOYFLAG_BIN))
+USE_USLEEP(NEWTOY(usleep, "<1>1", TOYFLAG_BIN|TOYFLAG_GOOD))
 
 config USLEEP
   bool "usleep"

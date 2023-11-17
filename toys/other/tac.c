@@ -2,7 +2,7 @@
  *
  * Copyright 2012 Rob Landley <rob@landley.net>
 
-USE_TAC(NEWTOY(tac, NULL, TOYFLAG_USR|TOYFLAG_BIN))
+USE_TAC(NEWTOY(tac, NULL, TOYFLAG_USR|TOYFLAG_BIN|TOYFLAG_GOOD))
 
 config TAC
   bool "tac"
