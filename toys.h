@@ -35,26 +35,24 @@
 #include <stdlib.h>
 /* Windows */
 #include <io.h>
+typedef int(*mkdir_mswin)(const char*);
+const mkdir_mswin mkdir_prime = &mkdir;
+#define mkdir mkdir_chmod
+int mkdir(const char* path, mode_t mode);
+#define random rand
+#define srandom srand
+
 /* missing declarations (normally provided in stdlib.h) */
 inline int setenv(const char *name, const char *value, int overwrite) { return 0; }
 inline int unsetenv(const char *name) { return 0; }
 char *getenv(const char *name); /* stub or implement? */
 
 #include <string.h>
-#ifdef PROVIDE_STPCPY
-inline char* stpcpy(char* dest, const char* src) {
-  const size_t len = strlen(src);
-  return strcpy(dest, src) + len;
-}
-#endif
-#ifdef PROVIDE_STRNDUP
-inline char* strndup(const char *src, size_t atmost) {
-  char* trg = malloc(atmost + 1); // '\0'
-  if(trg) {
-    strncpy(trg, src, atmost);
-  }
-  return trg;
-}
+#ifdef PROVIDE_MGW_STR
+char* stpcpy(char* dest, const char* src);
+char* strndup(const char *src, size_t atmost);
+char *strcasestr(const char *haystack, const char *needle);
+void *memmem(const void *haystack, size_t haystack_sz, const void *needle, size_t needle_sz);
 #endif
 #include <strings.h>
 #include <sys/mman.h>
@@ -147,7 +145,10 @@ inline int setuid(uid_t uid) { return 0; }
 inline int setgid(gid_t gid) { return 0; }
 
 // FIXME implement [f]chown in libowners
+inline int chown(const char* path, uid_t owner, gid_t group) { return 0; }
+inline int lchown(const char* path, uid_t owner, gid_t group) { return 0; }
 inline int fchown(int fd, uid_t owner, gid_t group) { return 0; }
+inline int fchownat(int dirfd, const char* relpath, uid_t owner, gid_t group) { return 0; }
 
 /* silverware */
 inline int vfork() { return -1; }
@@ -162,10 +163,8 @@ inline pid_t waitpid(pid_t pid, int *wstatus, int options) { return -1; }
 inline int pipe(int pipefd[2]) { return _pipe(pipefd, 4096, _O_BINARY); }
 inline int kill(pid_t pid, int sig) { return errno = ENOSYS, -1; } // TODO TerminateThread
 
-/* strptime library TODO extract component, as the license is different */
+/* strptime library */
 #include "libob/strptime.h"
-
-// strcasestr, memmem
 
 // TODO expose a convenient "at" macro in libfatctl
 inline int utimens(const char* pathname, const struct timespec times[2]) { return 0; }
@@ -175,8 +174,7 @@ inline int utimensat(int dirfd, const char* relpath, const struct timespec times
 /* getline-compatible */
 #include <getline/getline.h>
 
-/* MOREINFO candidate for libsysroot? */
-inline int chroot(const char* path) { return -1; }
+int chroot(const char* path);
 
 // Get list of function prototypes for all enabled command_main() functions.
 
