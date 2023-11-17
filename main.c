@@ -293,7 +293,7 @@ void toybox_main(void)
         for (j = 0; toy_paths[j]; j++)
           if (fl & (1<<j)) len += printf("%s", toy_paths[j]);
       }
-      char good = toy_list[i].toy_main ? '+' : '-';
+      char good = toy_list[i].toy_main ? fl & TOYFLAG_GOOD ? '+' : '?' : '-';
       len += printf("%c%s", good, toy_list[i].name);
       if (++len > width-15) len = 0;
       xputc(len ? ' ' : '\n');

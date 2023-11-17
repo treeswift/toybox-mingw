@@ -35,5 +35,8 @@
 // Line buffered stdout
 #define TOYFLAG_LINEBUF  (1<<11)
 
+// Porting: the command is known to work on the target
+#define TOYFLAG_GOOD     (1<<20)
+
 // Error code to return if argument parsing fails (default 1)
 #define TOYFLAG_ARGFAIL(x) (x<<24)
